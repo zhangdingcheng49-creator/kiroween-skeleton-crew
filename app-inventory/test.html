@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Tests - Skeleton Crew</title>
+    <link rel="stylesheet" href="../skeleton/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        .test-container {
+            padding: var(--spacing-xl) 0;
+        }
+        
+        .test-section {
+            margin-bottom: var(--spacing-2xl);
+        }
+        
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+        }
+        
+        .test-card {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+        }
+        
+        .test-header {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .test-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-xl);
+        }
+        
+        .test-icon.pass {
+            background-color: rgba(5, 150, 105, 0.1);
+            color: var(--color-success);
+        }
+        
+        .test-icon.fail {
+            background-color: rgba(220, 38, 38, 0.1);
+            color: var(--color-danger);
+        }
+        
+        .test-icon.warning {
+            background-color: rgba(217, 119, 6, 0.1);
+            color: var(--color-warning);
+        }
+        
+        .test-title {
+            flex: 1;
+        }
+        
+        .test-result {
+            font-weight: var(--font-weight-bold);
+            font-size: var(--font-size-sm);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .test-result.pass {
+            background-color: rgba(5, 150, 105, 0.1);
+            color: var(--color-success);
+        }
+        
+        .test-result.fail {
+            background-color: rgba(220, 38, 38, 0.1);
+            color: var(--color-danger);
+        }
+        
+        .test-result.warning {
+            background-color: rgba(217, 119, 6, 0.1);
+            color: var(--color-warning);
+        }
+        
+        .test-description {
+            margin-bottom: var(--spacing-md);
+            color: var(--text-secondary);
+        }
+        
+        .test-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-top: var(--spacing-md);
+        }
+        
+        .test-output {
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            margin-top: var(--spacing-md);
+            font-family: var(--font-family-mono);
+            font-size: var(--font-size-sm);
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        
+        .test-output.hidden {
+            display: none;
+        }
+        
+        .seed-data-btn {
+            margin-top: var(--spacing-md);
+        }
+    </style>
+</head>
+<body class="theme-light">
+    <header class="app-header">
+        <div class="header-container">
+            <div class="logo">
+                <h1><a href="index.html" class="logo-link">💀 Skeleton Crew</a></h1>
+            </div>
+            
+            <nav class="main-nav">
+                <ul class="nav-links">
+                    <li><a href="../skeleton/index.html" class="nav-link"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="../app-habit-tracker/index.html" class="nav-link"><i class="fas fa-tasks"></i> Habits</a></li>
+                    <li><a href="index.html" class="nav-link"><i class="fas fa-boxes"></i> Inventory</a></li>
+                    <li><a href="test.html" class="nav-link active"><i class="fas fa-vial"></i> Tests</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <section class="hero">
+                <h2 class="hero-title">Inventory Manager Tests</h2>
+                <p class="hero-subtitle">Test the functionality of the inventory management system</p>
+            </section>
+            
+            <div class="test-container">
+                <div class="test-section">
+                    <div class="section-header">
+                        <h3>Data Layer Tests</h3>
+                        <p class="section-subtitle">Testing the underlying data storage and retrieval</p>
+                    </div>
+                    
+                    <div class="test-grid">
+                        <div class="test-card">
+                            <div class="test-header">
+                                <div class="test-icon pass">
+                                    <i class="fas fa-database"></i>
+                                </div>
+                                <div class="test-title">
+                                    <h4>Storage Initialization</h4>
+                                </div>
+                                <span class="test-result pass" id="storageTestResult">Not Run</span>
+                            </div>
+                            <p class="test-description">Test if localStorage is available and can be accessed</p>
+                            <div class="test-actions">
+                                <button class="btn btn-outline" onclick="runStorageTest()">
+                                    <i class="fas fa-play"></i> Run Test
+                                </button>
+                                <button class="btn btn-outline" onclick="toggleOutput('storageTestOutput')">
+                                    <i class="fas fa-eye"></i> Show Details
+                                </button>
+                            </div>
+                            <div class="test-output hidden" id="storageTestOutput">
+                                <!-- Test output will appear here -->
+                            </div>
+                        </div>
+                        
+                        <div class="test-card">
+                            <div class="test-header">
+                                <div class="test-icon pass">
+                                    <i class="fas fa-plus-circle"></i>
+                                </div>
+                                <div class="test-title">
+                                    <h4>Add Item Test</h4>
+                                </div>
+                                <span class="test-result pass" id="addItemTestResult">Not Run</span>
+                            </div>
+                            <p class="test-description">Test adding a new item to the inventory</p>
+                            <div class="test-actions">
+                                <button class="btn btn-outline" onclick="runAddItemTest()">
+                                    <i class="fas fa-play"></i> Run Test
+                                </button>
+                                <button class="btn btn-outline" onclick="toggleOutput('addItemTestOutput')">
+                                    <i class="fas fa-eye"></i> Show Details
+                                </button>
+                            </div>
+                            <div class="test-output hidden" id="addItemTestOutput">
+                                <!-- Test output will appear here -->
+                            </div>
+                        </div>
+                        
+                        <div class="test-card">
+                            <div class="test-header">
+                                <div class="test-icon pass">
+                                    <i class="fas fa-edit"></i>
+                                </div>
+                                <div class="test-title">
+                                    <h4>Update Item Test</h4>
+                                </div>
+                                <span class="test-result pass" id="updateItemTestResult">Not Run</span>
+                            </div>
+                            <p class="test-description">Test updating an existing item's quantity</p>
+                            <div class="test-actions">
+                                <button class="btn btn-outline" onclick="runUpdateItemTest()">
+                                    <i class="fas fa-play"></i> Run Test
+                                </button>
+                                <button class="btn btn-outline" onclick="toggleOutput('updateItemTestOutput')">
+                                    <i class="fas fa-eye"></i> Show Details
+                                </button>
+                            </div>
+                            <div class="test-output hidden" id="updateItemTestOutput">
+                                <!-- Test output will appear here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="test-section">
+                    <div class="section-header">
+                        <h3>Business Logic Tests</h3>
+                        <p class="section-subtitle">Testing inventory-specific functionality</p>
+                    </div>
+                    
+                    <div class="test-grid">
+                        <div class="test-card">
+                            <div class="test-header">
+                                <div class="test-icon warning">
+                                    <i class="fas fa-search"></i>
+                                </div>
+                                <div class="test-title">
+                                    <h4>Search Functionality</h4>
+                                </div>
+                                <span class="test-result warning" id="searchTestResult">Not Run</span>
+                            </div>
+                            <p class="test-description">Test searching and filtering inventory items</p>
+                            <div class="test-actions">
+                                <button class="btn btn-outline" onclick="runSearchTest()">
+                                    <i class="fas fa-play"></i> Run Test
+                                </button>
+                                <button class="btn btn-outline" onclick="toggleOutput('searchTestOutput')">
+                                    <i class="fas fa-eye"></i> Show Details
+                                </button>
+                            </div>
+                            <div class="test-output hidden" id="searchTestOutput">
+                                <!-- Test output will appear here -->
+                            </div>
+                        </div>
+                        
+                        <div class="test-card">
+                            <div class="test-header">
+                                <div class="test-icon warning">
+                                    <i class="fas fa-chart-bar"></i>
+                                </div>
+                                <div class="test-title">
+                                    <h4>Statistics Calculation</h4>
+                                </div>
+                                <span class="test-result warning" id="statsTestResult">Not Run</span>
+                            </div>
+                            <p class="test-description">Test inventory statistics and calculations</p>
+                            <div class="test-actions">
+                                <button class="btn btn-outline" onclick="runStatsTest()">
+                                    <i class="fas fa-play"></i> Run Test
+                                </button>
+                                <button class="btn btn-outline" onclick="toggleOutput('statsTestOutput')">
+                                    <i class="fas fa-eye"></i> Show Details
+                                </button>
+                            </div>
+                            <div class="test-output hidden" id="statsTestOutput">
+                                <!-- Test output will appear here -->
+                            </div>
+                        </div>
+                        
+                        <div class="test-card">
+                            <div class="test-header">
+                                <div class="test-icon warning">
+                                    <i class="fas fa-file-export"></i>
+                                </div>
+                                <div class="test-title">
+                                    <h4>Export Functionality</h4>
+                                </div>
+                                <span class="test-result warning" id="exportTestResult">Not Run</span>
+                            </div>
+                            <p class="test-description">Test data export to CSV format</p>
+                            <div class="test-actions">
+                                <button class="btn btn-outline" onclick="runExportTest()">
+                                    <i class="fas fa-play"></i> Run Test
+                                </button>
+                                <button class="btn btn-outline" onclick="toggleOutput('exportTestOutput')">
+                                    <i class="fas fa-eye"></i> Show Details
+                                </button>
+                            </div>
+                            <div class="test-output hidden" id="exportTestOutput">
+                                <!-- Test output will appear here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="test-section">
+                    <div class="section-header">
+                        <h3>Test Utilities</h3>
+                        <p class="section-subtitle">Tools for testing and debugging</p>
+                    </div>
+                    
+                    <div class="test-grid">
+                        <div class="test-card">
+                            <div class="test-header">
+                                <div class="test-icon">
+                                    <i class="fas fa-seedling"></i>
+                                </div>
+                                <div class="test-title">
+                                    <h4>Seed Test Data</h4>
+                                </div>
+                            </div>
+                            <p class="test-description">Add sample inventory data for testing</p>
+                            <div class="test-actions">
+                                <button class="btn btn-primary seed-data-btn" onclick="seedTestData()">
+                                    <i class="fas fa-plus"></i> Add Sample Data
+                                </button>
+                                <button class="btn btn-outline seed-data-btn" onclick="clearTestData()">
+                                    <i class="fas fa-trash"></i> Clear All Data
+                                </button>
+                            </div>
+                            <div class="test-output hidden" id="seedDataOutput">
+                                <!-- Seed data output will appear here -->
+                            </div>
+                        </div>
+                        
+                        <div class="test-card">
+                            <div class="test-header">
+                                <div class="test-icon">
+                                    <i class="fas fa-bug"></i>
+                                </div>
+                                <div class="test-title">
+                                    <h4>Debug Console</h4>
+                                </div>
+                            </div>
+                            <p class="test-description">View current inventory data and debug info</p>
+                            <div class="test-actions">
+                                <button class="btn btn-outline" onclick="showDebugInfo()">
+                                    <i class="fas fa-terminal"></i> Show Debug Info
+                                </button>
+                                <button class="btn btn-outline" onclick="clearDebugOutput()">
+                                    <i class="fas fa-eraser"></i> Clear Output
+                                </button>
+                            </div>
+                            <div class="test-output" id="debugOutput">
+                                Click "Show Debug Info" to display current inventory data
+                            </div>
+                        </div>
+                        
+                        <div class="test-card">
+                            <div class="test-header">
+                                <div class="test-icon">
+                                    <i class="fas fa-vial"></i>
+                                </div>
+                                <div class="test-title">
+                                    <h4>Run All Tests</h4>
+                                </div>
+                            </div>
+                            <p class="test-description">Run all available tests at once</p>
+                            <div class="test-actions">
+                                <button class="btn btn-primary" onclick="runAllTests()">
+                                    <i class="fas fa-play-circle"></i> Run All Tests
+                                </button>
+                                <button class="btn btn-outline" onclick="resetAllTests()">
+                                    <i class="fas fa-redo"></i> Reset Tests
+                                </button>
+                            </div>
+                            <div class="test-output hidden" id="allTestsOutput">
+                                <!-- All tests output will appear here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="app-footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3 class="footer-logo">💀 Skeleton Crew</h3>
+                    <p class="footer-tagline">Building better web apps, one skeleton at a time.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../skeleton/app.js"></script>
+    <script>
+        // Simple test utilities
+        let testDataLayer = null;
+        
+        function initTestDataLayer() {
+            if (!testDataLayer) {
+                testDataLayer = new DataLayer('test');
+            }
+        }
+        
+        function toggleOutput(elementId) {
+            const element = document.getElementById(elementId);
+            element.classList.toggle('hidden');
+        }
+        
+        function runStorageTest() {
+            initTestDataLayer();
+            const output = document.getElementById('storageTestOutput');
+            const result = document.getElementById('storageTestResult');
+            
+            try {
+                // Test localStorage availability
+                if (typeof localStorage === 'undefined') {
+                    throw new Error('localStorage is not available');
+                }
+                
+                // Test write/read
+                const testKey = 'inventory-test-storage';
+                const testValue = 'test-value-' + Date.now();
+                localStorage.setItem(testKey, testValue);
+                const retrieved = localStorage.getItem(testKey);
+                localStorage.removeItem(testKey);
+                
+                if (retrieved !== testValue) {
+                    throw new Error('Storage read/write failed');
+                }
+                
+                output.textContent = '✓ localStorage test passed\n✓ Read/write operations working\n✓ Storage is available';
+                output.className = 'test-output';
+                result.textContent = 'Pass';
+                result.className = 'test-result pass';
+                
+            } catch (error) {
+                output.textContent = '✗ Storage test failed:\n' + error.message;
+                output.className = 'test-output';
+                result.textContent = 'Fail';
+                result.className = 'test-result fail';
+            }
+        }
+        
+        function runAddItemTest() {
+            initTestDataLayer();
+            const output = document.getElementById('addItemTestOutput');
+            const result = document.getElementById('addItemTestResult');
+            
+            try {
+                // Clear any existing test data
+                testDataLayer.clear('inventory');
+                
+                // Add test item
+                const testItem = {
+                    name: 'Test Product',
+                    price: 19.99,
+                    quantity: 10
+                };
+                
+                const addedItem = testDataLayer.add('inventory', testItem);
+                
+                if (!addedItem.id) {
+                    throw new Error('Item was not assigned an ID');
+                }
+                
+                if (addedItem.name !== testItem.name) {
+                    throw new Error('Item name mismatch');
+                }
+                
+                if (addedItem.price !== testItem.price) {
+                    throw new Error('Item price mismatch');
+                }
+                
+                if (addedItem.quantity !== testItem.quantity) {
+                    throw new Error('Item quantity mismatch');
+                }
+                
+                // Verify item was actually stored
+                const storedItems = testDataLayer.getAll('inventory');
+                if (storedItems.length !== 1) {
+                    throw new Error('Item count mismatch');
+                }
+                
+                output.textContent = `✓ Item added successfully\n✓ ID assigned: ${addedItem.id}\n✓ Name: ${addedItem.name}\n✓ Price: $${addedItem.price}\n✓ Quantity: ${addedItem.quantity}\n✓ Total items in storage: ${storedItems.length}`;
+                output.className = 'test-output';
+                result.textContent = 'Pass';
+                result.className = 'test-result pass';
+                
+            } catch (error) {
+                output.textContent = '✗ Add item test failed:\n' + error.message;
+                output.className = 'test-output';
+                result.textContent = 'Fail';
+                result.className = 'test-result fail';
+            }
+        }
+        
+        function runUpdateItemTest() {
+            initTestDataLayer();
+            const output = document.getElementById('updateItemTestOutput');
+            const result = document.getElementById('updateItemTestResult');
+            
+            try {
+                // Clear any existing test data
+                testDataLayer.clear('inventory');
+                
+                // Add test item
+                const testItem = {
+                    name: 'Update Test Product',
+                    price: 29.99,
+                    quantity: 5
+                };
+                
+                const addedItem = testDataLayer.add('inventory', testItem);
+                const itemId = addedItem.id;
+                
+                // Update item
+                const updatedItem = testDataLayer.update('inventory', itemId, { quantity: 15 });
+                
+                if (!updatedItem) {
+                    throw new Error('Update returned null');
+                }
+                
+                if (updatedItem.quantity !== 15) {
+                    throw new Error('Quantity not updated correctly');
+                }
+                
+                if (!updatedItem.updatedAt) {
+                    throw new Error('updatedAt timestamp not set');
+                }
+                
+                // Verify update persisted
+                const retrievedItem = testDataLayer.get('inventory', itemId);
+                if (retrievedItem.quantity !== 15) {
+                    throw new Error('Update not persisted to storage');
+                }
+                
+                output.textContent = `✓ Item updated successfully\n✓ Original quantity: 5\n✓ New quantity: ${updatedItem.quantity}\n✓ updatedAt timestamp: ${updatedItem.updatedAt}\n✓ Update persisted to storage`;
+                output.className = 'test-output';
+                result.textContent = 'Pass';
+                result.className = 'test-result pass';
+                
+            } catch (error) {
+                output.textContent = '✗ Update item test failed:\n' + error.message;
+                output.className = 'test-output';
+                result.textContent = 'Fail';
+                result.className = 'test-result fail';
+            }
+        }
+        
+        function runSearchTest() {
+            const output = document.getElementById('searchTestOutput');
+            const result = document.getElementById('searchTestResult');
+            
+            output.textContent = 'Search test requires manual verification\n\n1. Open the main inventory page\n2. Add several items with different names\n3. Use the search box to filter items\n4. Verify only matching items are shown';
+            output.className = 'test-output';
+            result.textContent = 'Manual';
+            result.className = 'test-result warning';
+        }
+        
+        function runStatsTest() {
+            const output = document.getElementById('statsTestOutput');
+            const result = document.getElementById('statsTestResult');
+            
+            output.textContent = 'Statistics test requires manual verification\n\n1. Open the main inventory page\n2. Add items with different quantities and prices\n3. Verify statistics update correctly:\n   - Total items count\n   - Total value calculation\n   - Low stock detection\n   - Out of stock detection';
+            output.className = 'test-output';
+            result.textContent = 'Manual';
+            result.className = 'test-result warning';
+        }
+        
+        function runExportTest() {
+            const output = document.getElementById('exportTestOutput');
+            const result = document.getElementById('exportTestResult');
+            
+            output.textContent = 'Export test requires manual verification\n\n1. Open the main inventory page\n2. Add some test items\n3. Click the "Export Data" button\n4. Verify CSV file downloads\n5. Open CSV to verify data format\n6. Check for correct headers and data';
+            output.className = 'test-output';
+            result.textContent = 'Manual';
+            result.className = 'test-result warning';
+        }
+        
+        function seedTestData() {
+            initTestDataLayer();
+            const output = document.getElementById('seedDataOutput');
+            
+            // Sample inventory data
+            const sampleItems = [
+                { name: 'Laptop', price: 999.99, quantity: 5 },
+                { name: 'Mouse', price: 29.99, quantity: 25 },
+                { name: 'Keyboard', price: 79.99, quantity: 12 },
+                { name: 'Monitor', price: 299.99, quantity: 8 },
+                { name: 'Headphones', price: 149.99, quantity: 3 },
+                { name: 'Webcam', price: 59.99, quantity: 15 },
+                { name: 'USB Cable', price: 9.99, quantity: 50 },
+                { name: 'Power Adapter', price: 49.99, quantity: 0 },
+                { name: 'Laptop Bag', price: 39.99, quantity: 7 },
+                { name: 'Mouse Pad', price: 14.99, quantity: 30 }
+            ];
+            
+            try {
+                // Clear existing test data
+                testDataLayer.clear('inventory');
+                
+                // Add sample items
+                let addedCount = 0;
+                sampleItems.forEach(item => {
+                    testDataLayer.add('inventory', item);
+                    addedCount++;
+                });
+                
+                output.textContent = `✓ Added ${addedCount} sample items to test inventory\n\nSample items include:\n${sampleItems.map(item => `- ${item.name}: $${item.price} (${item.quantity} in stock)`).join('\n')}\n\nRefresh the main inventory page to see the data`;
+                output.className = 'test-output';
+                output.classList.remove('hidden');
+                
+            } catch (error) {
+                output.textContent = '✗ Failed to seed test data:\n' + error.message;
+                output.className = 'test-output';
+                output.classList.remove('hidden');
+            }
+        }
+        
+        function clearTestData() {
+            initTestDataLayer();
+            const output = document.getElementById('seedDataOutput');
+            
+            try {
+                testDataLayer.clear('inventory');
+                output.textContent = '✓ Cleared all test inventory data\n\nRefresh the main inventory page to see empty state';
+                output.className = 'test-output';
+                output.classList.remove('hidden');
+                
+            } catch (error) {
+                output.textContent = '✗ Failed to clear test data:\n' + error.message;
+                output.className = 'test-output';
+                output.classList.remove('hidden');
+            }
+        }
+        
+        function showDebugInfo() {
+            initTestDataLayer();
+            const output = document.getElementById('debugOutput');
+            
+            try {
+                const items = testDataLayer.getAll('inventory');
+                const stats = testDataLayer.getStats ? testDataLayer.getStats('inventory') : null;
+                
+                let debugInfo = `=== DEBUG INFORMATION ===\n\n`;
+                debugInfo += `Storage Prefix: ${testDataLayer.prefix}\n`;
+                debugInfo += `Collection: inventory\n`;
+                debugInfo += `Total Items: ${items.length}\n\n`;
+                
+                if (stats) {
+                    debugInfo += `Statistics:\n`;
+                    Object.entries(stats).forEach(([key, value]) => {
+                        debugInfo += `  ${key}: ${value}\n`;
+                    });
+                    debugInfo += '\n';
+                }
+                
+                if (items.length > 0) {
+                    debugInfo += `Items (${items.length}):\n`;
+                    items.forEach((item, index) => {
+                        debugInfo += `  [${index + 1}] ${item.name} - $${item.price} x ${item.quantity} = $${(item.price * item.quantity).toFixed(2)}\n`;
+                        debugInfo += `      ID: ${item.id}\n`;
+                        debugInfo += `      Created: ${new Date(item.createdAt).toLocaleString()}\n`;
+                        if (item.updatedAt) {
+                            debugInfo += `      Updated: ${new Date(item.updatedAt).toLocaleString()}\n`;
+                        }
+                        debugInfo += '\n';
+                    });
+                } else {
+                    debugInfo += 'No items in inventory\n';
+                }
+                
+                debugInfo += `=== END DEBUG INFO ===`;
+                
+                output.textContent = debugInfo;
+                
+            } catch (error) {
+                output.textContent = 'Error getting debug info:\n' + error.message;
+            }
+        }
+        
+        function clearDebugOutput() {
+            const output = document.getElementById('debugOutput');
+            output.textContent = 'Click "Show Debug Info" to display current inventory data';
+        }
+        
+        function runAllTests() {
+            const output = document.getElementById('allTestsOutput');
+            output.textContent = 'Running all tests...\n\n';
+            output.className = 'test-output';
+            output.classList.remove('hidden');
+            
+            // Run tests in sequence
+            setTimeout(() => runStorageTest(), 100);
+            setTimeout(() => runAddItemTest(), 300);
+            setTimeout(() => runUpdateItemTest(), 500);
+            setTimeout(() => runSearchTest(), 700);
+            setTimeout(() => runStatsTest(), 900);
+            setTimeout(() => runExportTest(), 1100);
+            
+            setTimeout(() => {
+                output.textContent += '\nAll tests initiated. Check individual test results above.';
+            }, 1300);
+        }
+        
+        function resetAllTests() {
+            // Reset all test results
+            const testResults = [
+                'storageTestResult', 'addItemTestResult', 'updateItemTestResult',
+                'searchTestResult', 'statsTestResult', 'exportTestResult'
+            ];
+            
+            testResults.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.textContent = 'Not Run';
+                    element.className = 'test-result pass';
+                }
+            });
+            
+            // Hide all outputs
+            const outputs = [
+                'storageTestOutput', 'addItemTestOutput', 'updateItemTestOutput',
+                'searchTestOutput', 'statsTestOutput', 'exportTestOutput',
+                'seedDataOutput', 'allTestsOutput'
+            ];
+            
+            outputs.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.className = 'test-output hidden';
+                }
+            });
+            
+            // Reset debug output
+            clearDebugOutput();
+            
+            // Clear test data
+            initTestDataLayer();
+            testDataLayer.clear('inventory');
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize theme and auth from skeleton
+            new ThemeManager();
+            new MockAuth();
+        });
+    </script>
+</body>
+</html>

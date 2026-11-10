@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skeleton Test</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ccc; border-radius: 8px; }
+        button { padding: 8px 16px; margin: 5px; cursor: pointer; }
+        code { background: #f0f0f0; padding: 2px 4px; border-radius: 3px; }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>Skeleton App.js Test</h1>
+    
+    <div class="test-section">
+        <h2>Theme Manager Test</h2>
+        <p>Current theme: <span id="currentTheme">light</span></p>
+        <button onclick="testTheme()">Test Theme Toggle</button>
+        <button onclick="checkLocalStorage()">Check localStorage for theme</button>
+        <div id="themeResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Mock Auth Test</h2>
+        <p>User status: <span id="userStatus">Not signed in</span></p>
+        <button onclick="testSignIn()">Test Sign In</button>
+        <button onclick="testSignOut()">Test Sign Out</button>
+        <button onclick="checkAuthStorage()">Check localStorage for user</button>
+        <div id="authResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Data Layer Test</h2>
+        <button onclick="testDataLayer()">Run Data Layer Tests</button>
+        <button onclick="testDemoData()">Check Demo Data</button>
+        <div id="dataResult"></div>
+    </div>
+    
+    <script src="app.js"></script>
+    <script>
+        function testTheme() {
+            const before = document.body.classList.contains('theme-dark') ? 'dark' : 'light';
+            window.skeletonApp.themeManager.toggleTheme();
+            const after = document.body.classList.contains('theme-dark') ? 'dark' : 'light';
+            document.getElementById('currentTheme').textContent = after;
+            document.getElementById('themeResult').innerHTML = 
+                `<p class="success">Theme toggled from ${before} to ${after}</p>`;
+        }
+        
+        function checkLocalStorage() {
+            const theme = localStorage.getItem('skeleton-theme');
+            document.getElementById('themeResult').innerHTML = 
+                `<p>localStorage theme: <code>${theme || 'not set (defaults to light)'}</code></p>`;
+        }
+        
+        function testSignIn() {
+            const displayName = prompt('Enter test display name:');
+            if (displayName) {
+                window.skeletonApp.auth.signIn();
+            }
+            updateUserStatus();
+        }
+        
+        function testSignOut() {
+            window.skeletonApp.auth.signOut();
+            updateUserStatus();
+        }
+        
+        function updateUserStatus() {
+            const user = window.skeletonApp.auth.getUser();
+            const statusEl = document.getElementById('userStatus');
+            if (user) {
+                statusEl.textContent = `Signed in as: ${user.displayName}`;
+                statusEl.className = 'success';
+            } else {
+                statusEl.textContent = 'Not signed in';
+                statusEl.className = '';
+            }
+        }
+        
+        function checkAuthStorage() {
+            const user = localStorage.getItem('skeleton-user');
+            const result = document.getElementById('authResult');
+            if (user) {
+                result.innerHTML = `<p>localStorage user: <code>${user}</code></p>`;
+            } else {
+                result.innerHTML = '<p>No user in localStorage</p>';
+            }
+            updateUserStatus();
+        }
+        
+        function testDataLayer() {
+            const data = window.skeletonApp.data;
+            const result = document.getElementById('dataResult');
+            let html = '<h3>Data Layer Test Results:</h3>';
+            
+            // Test 1: Add item
+            const testItem = { name: 'Test Item', value: 42 };
+            const added = data.add('test-collection', testItem);
+            html += `<p>✓ Added item with ID: ${added.id}</p>`;
+            
+            // Test 2: Get all
+            const allItems = data.getAll('test-collection');
+            html += `<p>✓ Collection has ${allItems.length} items</p>`;
+            
+            // Test 3: Get single
+            const single = data.get('test-collection', added.id);
+            html += `<p>✓ Retrieved item: ${single.name} = ${single.value}</p>`;
+            
+            // Test 4: Update
+            const updated = data.update('test-collection', added.id, { value: 100 });
+            html += `<p>✓ Updated value to: ${updated.value}</p>`;
+            
+            // Test 5: Remove
+            const removed = data.remove('test-collection', added.id);
+            html += `<p>✓ Removed item: ${removed ? 'success' : 'failed'}</p>`;
+            
+            // Test 6: Clear
+            data.clear('test-collection');
+            const afterClear = data.getAll('test-collection');
+            html += `<p>✓ After clear: ${afterClear.length} items</p>`;
+            
+            result.innerHTML = html;
+        }
+        
+        function testDemoData() {
+            const data = window.skeletonApp.data;
+            const result = document.getElementById('dataResult');
+            let html = '<h3>Demo Data Check:</h3>';
+            
+            const habits = data.getAll('habits');
+            const inventory = data.getAll('inventory');
+            
+            html += `<p>Habits collection: ${habits.length} items</p>`;
+            if (habits.length > 0) {
+                html += '<ul>';
+                habits.forEach(habit => {
+                    html += `<li>${habit.name} (streak: ${habit.streak})</li>`;
+                });
+                html += '</ul>';
+            }
+            
+            html += `<p>Inventory collection: ${inventory.length} items</p>`;
+            if (inventory.length > 0) {
+                html += '<ul>';
+                inventory.forEach(item => {
+                    html += `<li>${item.name} (${item.quantity} in stock)</li>`;
+                });
+                html += '</ul>';
+            }
+            
+            result.innerHTML = html;
+        }
+        
+        // Initialize user status
+        updateUserStatus();
+        document.getElementById('currentTheme').textContent = 
+            document.body.classList.contains('theme-dark') ? 'dark' : 'light';
+    </script>
+</body>
+</html>

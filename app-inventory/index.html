@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop Inventory - Skeleton Crew</title>
+    <link rel="stylesheet" href="../skeleton/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💀</text></svg">
+    <style>
+        /* Inventory Specific Styles */
+        .inventory-form-container {
+            margin-bottom: var(--spacing-2xl);
+        }
+        
+        .inventory-form {
+            margin-top: var(--spacing-lg);
+        }
+        
+        .form-group {
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: var(--spacing-sm);
+            font-weight: var(--font-weight-medium);
+            color: var(--text-primary);
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            background-color: var(--bg-surface);
+            color: var(--text-primary);
+            font-family: var(--font-family-base);
+            font-size: var(--font-size-base);
+            transition: border-color var(--transition-fast) var(--transition-timing);
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-top: var(--spacing-lg);
+        }
+        
+        .search-container {
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .search-box {
+            max-width: 400px;
+        }
+        
+        .inventory-stats {
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: var(--spacing-lg);
+            background-color: var(--bg-surface);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+        }
+        
+        .stat-value {
+            font-size: var(--font-size-3xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--color-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .stat-label {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .inventory-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .inventory-table th {
+            text-align: left;
+            padding: var(--spacing-md);
+            background-color: var(--bg-secondary);
+            color: var(--text-secondary);
+            font-weight: var(--font-weight-semibold);
+            font-size: var(--font-size-sm);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .inventory-table td {
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+        
+        .inventory-table tr:hover {
+            background-color: var(--bg-secondary);
+        }
+        
+        .item-name {
+            font-weight: var(--font-weight-medium);
+        }
+        
+        .item-price {
+            font-family: var(--font-family-mono);
+            font-weight: var(--font-weight-medium);
+        }
+        
+        .item-quantity {
+            font-family: var(--font-family-mono);
+            font-weight: var(--font-weight-medium);
+        }
+        
+        .item-stock {
+            display: inline-block;
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-medium);
+        }
+        
+        .item-stock.low {
+            background-color: rgba(220, 38, 38, 0.1);
+            color: var(--color-danger);
+        }
+        
+        .item-stock.medium {
+            background-color: rgba(217, 119, 6, 0.1);
+            color: var(--color-warning);
+        }
+        
+        .item-stock.high {
+            background-color: rgba(5, 150, 105, 0.1);
+            color: var(--color-success);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+        
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-md);
+            border: none;
+            background-color: var(--bg-secondary);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all var(--transition-fast) var(--transition-timing);
+        }
+        
+        .btn-icon:hover {
+            background-color: var(--color-primary);
+            color: var(--text-on-primary);
+        }
+        
+        .btn-icon.danger:hover {
+            background-color: var(--color-danger);
+            color: var(--text-on-primary);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: var(--spacing-3xl) var(--spacing-md);
+            color: var(--text-muted);
+        }
+        
+        .empty-state-icon {
+            font-size: var(--font-size-5xl);
+            margin-bottom: var(--spacing-lg);
+            opacity: 0.5;
+        }
+        
+        .empty-state-message {
+            font-size: var(--font-size-lg);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .empty-state-subtitle {
+            font-size: var(--font-size-base);
+            color: var(--text-muted);
+        }
+        
+        .inventory-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .inventory-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .action-buttons {
+                flex-wrap: wrap;
+            }
+            
+            .inventory-actions {
+                flex-direction: column;
+                gap: var(--spacing-md);
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body class="theme-light">
+    <header class="app-header">
+        <div class="header-container">
+            <div class="logo">
+                <h1><a href="../index.html" class="logo-link">💀 Skeleton Crew</a></h1>
+            </div>
+            
+            <nav class="main-nav">
+                <ul class="nav-links">
+                    <li><a href="../index.html" class="nav-link"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="../skeleton/index.html" class="nav-link"><i class="fas fa-layer-group"></i> Skeleton</a></li>
+                    <li><a href="../app-habit-tracker/index.html" class="nav-link"><i class="fas fa-tasks"></i> Habits</a></li>
+                    <li><a href="index.html" class="nav-link active"><i class="fas fa-boxes"></i> Inventory</a></li>
+                </ul>
+            </nav>
+            
+            <div class="user-actions">
+                <button class="theme-toggle" aria-label="Toggle theme" id="themeToggle">
+                    <span class="theme-icon"><i class="fas fa-moon"></i></span>
+                </button>
+                
+                <div class="user-status">
+                    <button class="signin-btn" id="signinBtn">
+                        <i class="fas fa-user"></i>
+                        <span>Sign In</span>
+                    </button>
+                </div>
+                
+                <button class="mobile-menu-toggle" aria-label="Toggle mobile menu" id="mobileMenuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="mobile-nav" id="mobileNav">
+        <ul class="mobile-nav-links">
+            <li><a href="../index.html" class="mobile-nav-link"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="../skeleton/index.html" class="mobile-nav-link"><i class="fas fa-layer-group"></i> Skeleton</a></li>
+            <li><a href="../app-habit-tracker/index.html" class="mobile-nav-link"><i class="fas fa-tasks"></i> Habits</a></li>
+            <li><a href="index.html" class="mobile-nav-link active"><i class="fas fa-boxes"></i> Inventory</a></li>
+        </ul>
+    </div>
+
+    <main class="main-content">
+        <div class="container">
+            <section class="hero">
+                <h2 class="hero-title">Shop Inventory Manager</h2>
+                <p class="hero-subtitle">Track and manage your shop inventory with ease</p>
+            </section>
+            
+            <section class="inventory-stats">
+                <div class="section-header">
+                    <h3>Inventory Summary</h3>
+                    <p class="section-subtitle">Quick overview of your shop's stock</p>
+                </div>
+                
+                <div class="stats-grid" id="inventoryStats">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalItems">0</div>
+                        <div class="stat-label">Total Items</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalValue">$0.00</div>
+                        <div class="stat-label">Total Value</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="lowStockItems">0</div>
+                        <div class="stat-label">Low Stock Items</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="outOfStockItems">0</div>
+                        <div class="stat-label">Out of Stock</div>
+                    </div>
+                </div>
+            </section>
+            
+            <div class="inventory-actions">
+                <div class="search-container">
+                    <input type="text" 
+                           class="form-input search-box" 
+                           id="searchInput" 
+                           placeholder="Search inventory items..."
+                           aria-label="Search inventory items">
+                </div>
+                
+                <button class="btn btn-primary" id="exportBtn">
+                    <i class="fas fa-download"></i> Export Data
+                </button>
+            </div>
+            
+            <section class="inventory-form-container">
+                <div class="section-header">
+                    <h3>Add New Item</h3>
+                    <p class="section-subtitle">Enter details for the new inventory item</p>
+                </div>
+                
+                <form class="inventory-form" id="addItemForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="itemName" class="form-label">Item Name</label>
+                            <input type="text" 
+                                   id="itemName" 
+                                   class="form-input" 
+                                   placeholder="Enter item name" 
+                                   required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="itemPrice" class="form-label">Price ($)</label>
+                            <input type="number" 
+                                   id="itemPrice" 
+                                   class="form-input" 
+                                   placeholder="0.00" 
+                                   min="0" 
+                                   step="0.01" 
+                                   required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="itemQuantity" class="form-label">Quantity</label>
+                            <input type="number" 
+                                   id="itemQuantity" 
+                                   class="form-input" 
+                                   placeholder="0" 
+                                   min="0" 
+                                   required>
+                        </div>
+                    </div>
+                    
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Add Item
+                        </button>
+                        <button type="button" class="btn btn-outline" id="clearFormBtn">
+                            <i class="fas fa-times"></i> Clear
+                        </button>
+                    </div>
+                </form>
+            </section>
+            
+            <section>
+                <div class="section-header">
+                    <h3>Inventory Items</h3>
+                    <p class="section-subtitle">Manage your shop's current stock</p>
+                </div>
+                
+                <div id="inventoryTableContainer">
+                    <!-- Inventory table will be populated by JavaScript -->
+                    <div class="empty-state" id="emptyState">
+                        <div class="empty-state-icon">
+                            <i class="fas fa-box-open"></i>
+                        </div>
+                        <h4 class="empty-state-message">No inventory items yet</h4>
+                        <p class="empty-state-subtitle">Add your first item using the form above</p>
+                    </div>
+                    
+                    <table class="inventory-table" id="inventoryTable" style="display: none;">
+                        <thead>
+                            <tr>
+                                <th>Item Name</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Stock Status</th>
+                                <th>Total Value</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventoryTableBody">
+                            <!-- Items will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            
+            <section class="cta">
+                <div class="cta-content">
+                    <h3>Need More Features?</h3>
+                    <p>This inventory manager is built on the Skeleton Crew framework. You can extend it with barcode scanning, supplier management, or advanced reporting.</p>
+                    <div class="cta-actions">
+                        <a href="../skeleton/index.html" class="btn btn-primary btn-large">
+                            <i class="fas fa-rocket"></i> Explore Skeleton
+                        </a>
+                        <a href="../app-habit-tracker/index.html" class="btn btn-outline btn-large">
+                            <i class="fas fa-tasks"></i> See Habit Tracker
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="app-footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3 class="footer-logo">💀 Skeleton Crew</h3>
+                    <p class="footer-tagline">Building better web apps, one skeleton at a time.</p>
+                </div>
+                
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Examples</h4>
+                        <ul>
+                            <li><a href="../skeleton/index.html">Skeleton Framework</a></li>
+                            <li><a href="../app-habit-tracker/index.html">Habit Tracker</a></li>
+                            <li><a href="index.html">Shop Inventory</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h4>Resources</h4>
+                        <ul>
+                            <li><a href="../skeleton/index.html">Documentation</a></li>
+                            <li><a href="#">API Reference</a></li>
+                            <li><a href="#">Tutorials</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h4>Legal</h4>
+                        <ul>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Terms of Service</a></li>
+                            <li><a href="#">License</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p class="copyright">&copy; 2025 Skeleton Crew. All rights reserved.</p>
+                <nav class="footer-nav">
+                    <a href="#" class="footer-nav-link"><i class="fab fa-github"></i></a>
+                    <a href="#" class="footer-nav-link"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="footer-nav-link"><i class="fab fa-discord"></i></a>
+                </nav>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../skeleton/app.js"></script>
+    <script src="inventory.js"></script>
+</body>
+</html>

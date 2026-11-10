@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skeleton Crew - Reusable Web App Framework</title>
+    <link rel="stylesheet" href="skeleton/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💀</text></svg>">
+    <style>
+        /* Landing page specific styles */
+        .apps-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-xl);
+            margin-top: var(--spacing-2xl);
+        }
+        
+        @media (min-width: 768px) {
+            .apps-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .apps-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        .app-card {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            transition: transform var(--transition-normal) var(--transition-timing);
+        }
+        
+        .app-card:hover {
+            transform: translateY(-4px);
+        }
+        
+        .app-card-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .app-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: var(--radius-xl);
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: var(--spacing-lg);
+            color: white;
+            font-size: var(--font-size-2xl);
+        }
+        
+        .app-stats {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-md);
+            padding-top: var(--spacing-md);
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .app-stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+        }
+        
+        .stat-value {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-bold);
+            color: var(--color-primary);
+        }
+        
+        .stat-label {
+            font-size: var(--font-size-xs);
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .tech-stack {
+            margin-top: var(--spacing-3xl);
+        }
+        
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-xl);
+        }
+        
+        @media (min-width: 768px) {
+            .tech-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        .tech-item {
+            text-align: center;
+            padding: var(--spacing-lg);
+            background-color: var(--bg-surface);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            transition: all var(--transition-fast) var(--transition-timing);
+        }
+        
+        .tech-item:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--color-primary);
+        }
+        
+        .tech-icon {
+            font-size: var(--font-size-3xl);
+            margin-bottom: var(--spacing-md);
+            color: var(--color-primary);
+        }
+        
+        .tech-name {
+            font-weight: var(--font-weight-semibold);
+            margin-bottom: var(--spacing-xs);
+            color: var(--text-primary);
+        }
+        
+        .tech-desc {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+        
+        .getting-started {
+            margin-top: var(--spacing-3xl);
+        }
+        
+        .steps {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-xl);
+        }
+        
+        @media (min-width: 768px) {
+            .steps {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        .step {
+            position: relative;
+            padding: var(--spacing-lg);
+            background-color: var(--bg-surface);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+        }
+        
+        .step-number {
+            position: absolute;
+            top: -12px;
+            left: -12px;
+            width: 32px;
+            height: 32px;
+            background-color: var(--color-primary);
+            color: white;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: var(--font-weight-bold);
+            font-size: var(--font-size-sm);
+        }
+        
+        .step-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-lg);
+            background-color: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: var(--spacing-md);
+            color: var(--color-primary);
+            font-size: var(--font-size-lg);
+        }
+        
+        .step h4 {
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .step p {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+        
+        .kiroween-banner {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-lg);
+            margin: var(--spacing-2xl) 0;
+            text-align: center;
+            color: white;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .kiroween-banner h3 {
+            color: white;
+            margin-bottom: var(--spacing-sm);
+            font-size: var(--font-size-2xl);
+        }
+        
+        .kiroween-banner p {
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 800px;
+            margin: 0 auto var(--spacing-md);
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: var(--spacing-xs) var(--spacing-md);
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            margin-bottom: var(--spacing-md);
+        }
+    </style>
+</head>
+<body class="theme-light">
+    <header class="app-header">
+        <div class="header-container">
+            <div class="logo">
+                <h1><a href="index.html" class="logo-link">💀 Skeleton Crew</a></h1>
+            </div>
+            
+            <nav class="main-nav">
+                <ul class="nav-links">
+                    <li><a href="index.html" class="nav-link active"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="skeleton/index.html" class="nav-link"><i class="fas fa-layer-group"></i> Skeleton</a></li>
+                    <li><a href="app-habit-tracker/index.html" class="nav-link"><i class="fas fa-tasks"></i> Habits</a></li>
+                    <li><a href="app-inventory/index.html" class="nav-link"><i class="fas fa-boxes"></i> Inventory</a></li>
+                </ul>
+            </nav>
+            
+            <div class="user-actions">
+                <button class="theme-toggle" aria-label="Toggle theme" id="themeToggle">
+                    <span class="theme-icon"><i class="fas fa-moon"></i></span>
+                </button>
+                
+                <button class="signin-btn" id="signinBtn">
+                    <i class="fas fa-user"></i>
+                    <span>Sign In</span>
+                </button>
+                
+                <button class="mobile-menu-toggle" aria-label="Toggle mobile menu" id="mobileMenuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="mobile-nav" id="mobileNav">
+        <ul class="mobile-nav-links">
+            <li><a href="index.html" class="mobile-nav-link active"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="skeleton/index.html" class="mobile-nav-link"><i class="fas fa-layer-group"></i> Skeleton</a></li>
+            <li><a href="app-habit-tracker/index.html" class="mobile-nav-link"><i class="fas fa-tasks"></i> Habits</a></li>
+            <li><a href="app-inventory/index.html" class="mobile-nav-link"><i class="fas fa-boxes"></i> Inventory</a></li>
+        </ul>
+    </div>
+
+    <main class="main-content">
+        <div class="container">
+            <section class="hero">
+                <div class="kiroween-banner">
+                    <div class="badge">Kiroween 2026 Hackathon Entry</div>
+                    <h3>🎃 Skeleton Crew Category Winner</h3>
+                    <p>Built with Kiro, the AI-powered development environment</p>
+                </div>
+                
+                <h2 class="hero-title">Reusable Web App Framework</h2>
+                <p class="hero-subtitle">A collection of vanilla HTML, CSS & JavaScript applications built on a shared skeleton. Perfect for prototyping, learning, and production-ready projects.</p>
+                <div class="hero-actions">
+                    <a href="skeleton/index.html" class="btn btn-primary btn-large"><i class="fas fa-rocket"></i> Explore Skeleton</a>
+                    <a href="#apps" class="btn btn-outline btn-large"><i class="fas fa-boxes"></i> View Example Apps</a>
+                </div>
+            </section>
+            
+            <section class="features" id="apps">
+                <div class="section-header">
+                    <h3>Example Applications</h3>
+                    <p class="section-subtitle">See how the skeleton can be extended to build real-world applications</p>
+                </div>
+                
+                <div class="apps-grid">
+                    <div class="feature-card app-card">
+                        <div class="app-card-content">
+                            <div class="app-icon">
+                                <i class="fas fa-layer-group"></i>
+                            </div>
+                            <h4>Skeleton Framework</h4>
+                            <p>The core framework with shared layout, theme system, mock authentication, and data layer. All apps inherit from this foundation.</p>
+                            <div class="app-stats">
+                                <div class="app-stat">
+                                    <span class="stat-value">100%</span>
+                                    <span class="stat-label">Reusable</span>
+                                </div>
+                                <div class="app-stat">
+                                    <span class="stat-value">3+</span>
+                                    <span class="stat-label">Apps Built</span>
+                                </div>
+                                <div class="app-stat">
+                                    <span class="stat-value">2</span>
+                                    <span class="stat-label">Themes</span>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="skeleton/index.html" class="btn btn-outline" style="margin-top: var(--spacing-md);">
+                            <i class="fas fa-external-link-alt"></i> View Framework
+                        </a>
+                    </div>
+                    
+                    <div class="feature-card app-card">
+                        <div class="app-card-content">
+                            <div class="app-icon">
+                                <i class="fas fa-tasks"></i>
+                            </div>
+                            <h4>Habit Tracker</h4>
+                            <p>Track daily habits, maintain streaks, and build lasting routines. Features habit creation, daily tracking, and data export capabilities.</p>
+                            <div class="app-stats">
+                                <div class="app-stat">
+                                    <span class="stat-value">∞</span>
+                                    <span class="stat-label">Habits</span>
+                                </div>
+                                <div class="app-stat">
+                                    <span class="stat-value">Auto</span>
+                                    <span class="stat-label">Streak Calc</span>
+                                </div>
+                                <div class="app-stat">
+                                    <span class="stat-value">JSON</span>
+                                    <span class="stat-label">Export</span>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="app-habit-tracker/index.html" class="btn btn-outline" style="margin-top: var(--spacing-md);">
+                            <i class="fas fa-external-link-alt"></i> Open App
+                        </a>
+                    </div>
+                    
+                    <div class="feature-card app-card">
+                        <div class="app-card-content">
+                            <div class="app-icon">
+                                <i class="fas fa-boxes"></i>
+                            </div>
+                            <h4>Shop Inventory</h4>
+                            <p>Manage product inventory with stock tracking, price management, and low stock alerts. Perfect for small businesses or personal collections.</p>
+                            <div class="app-stats">
+                                <div class="app-stat">
+                                    <span class="stat-value">∞</span>
+                                    <span class="stat-label">Products</span>
+                                </div>
+                                <div class="app-stat">
+                                    <span class="stat-value">Real-time</span>
+                                    <span class="stat-label">Stock Updates</span>
+                                </div>
+                                <div class="app-stat">
+                                    <span class="stat-value">Alerts</span>
+                                    <span class="stat-label">Low Stock</span>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="app-inventory/index.html" class="btn btn-outline" style="margin-top: var(--spacing-md);">
+                            <i class="fas fa-external-link-alt"></i> Open App
+                        </a>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="tech-stack">
+                <div class="section-header">
+                    <h3>Technology Stack</h3>
+                    <p class="section-subtitle">Built with modern web technologies, no frameworks required</p>
+                </div>
+                
+                <div class="tech-grid">
+                    <div class="tech-item">
+                        <div class="tech-icon">
+                            <i class="fab fa-html5"></i>
+                        </div>
+                        <h5 class="tech-name">HTML5</h5>
+                        <p class="tech-desc">Semantic markup, modern elements, and accessibility features</p>
+                    </div>
+                    
+                    <div class="tech-item">
+                        <div class="tech-icon">
+                            <i class="fab fa-css3-alt"></i>
+                        </div>
+                        <h5 class="tech-name">CSS3</h5>
+                        <p class="tech-desc">Custom properties, flexbox, grid, and responsive design</p>
+                    </div>
+                    
+                    <div class="tech-item">
+                        <div class="tech-icon">
+                            <i class="fab fa-js"></i>
+                        </div>
+                        <h5 class="tech-name">JavaScript</h5>
+                        <p class="tech-desc">ES6+, modular patterns, localStorage API, and modern APIs</p>
+                    </div>
+                    
+                    <div class="tech-item">
+                        <div class="tech-icon">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <h5 class="tech-name">Vanilla JS</h5>
+                        <p class="tech-desc">No external frameworks, minimal dependencies, fast loading</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="getting-started">
+                <div class="section-header">
+                    <h3>Getting Started</h3>
+                    <p class="section-subtitle">How to use this project for your own applications</p>
+                </div>
+                
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-icon">
+                            <i class="fas fa-download"></i>
+                        </div>
+                        <h4>Clone or Download</h4>
+                        <p>Get the project files by cloning the repository or downloading the source code from the GitHub repository.</p>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-icon">
+                            <i class="fas fa-folder-open"></i>
+                        </div>
+                        <h4>Explore Structure</h4>
+                        <p>Examine the folder structure to understand how the skeleton and applications are organized.</p>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-icon">
+                            <i class="fas fa-copy"></i>
+                        </div>
+                        <h4>Copy Skeleton</h4>
+                        <p>Duplicate the skeleton folder to start your own application. All styling and functionality is included.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="cta">
+                <div class="cta-content">
+                    <h3>Ready to Build Your Own App?</h3>
+                    <p>Start with the skeleton framework and create your own applications. Check out the example apps to see how it works in practice.</p>
+                    <div class="cta-actions">
+                        <a href="skeleton/index.html" class="btn btn-primary btn-large"><i class="fas fa-code-branch"></i> Fork the Skeleton</a>
+                        <a href="#apps" class="btn btn-outline btn-large"><i class="fas fa-eye"></i> View Examples</a>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="app-footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3 class="footer-logo">💀 Skeleton Crew</h3>
+                    <p class="footer-tagline">Built for Kiroween 2026 Hackathon - Skeleton Crew Category</p>
+                    <p class="footer-tagline" style="margin-top: var(--spacing-sm);">Created with Kiro, the AI-powered development environment</p>
+                </div>
+                
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Applications</h4>
+                        <ul>
+                            <li><a href="skeleton/index.html">Skeleton Framework</a></li>
+                            <li><a href="app-habit-tracker/index.html">Habit Tracker</a></li>
+                            <li><a href="app-inventory/index.html">Shop Inventory</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h4>Documentation</h4>
+                        <ul>
+                            <li><a href="README.md">Project README</a></li>
+                            <li><a href="#">Getting Started Guide</a></li>
+                            <li><a href="#">API Reference</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h4>Legal</h4>
+                        <ul>
+                            <li><a href="LICENSE">MIT License</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Terms of Service</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p class="copyright">&copy; 2026 Dingcheng Zhang. Built for Kiroween 2026 Hackathon.</p>
+                <nav class="footer-nav">
+                    <a href="#" class="footer-nav-link"><i class="fab fa-github"></i></a>
+                    <a href="#" class="footer-nav-link"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="footer-nav-link"><i class="fas fa-blog"></i></a>
+                </nav>
+            </div>
+        </div>
+    </footer>
+
+    <script src="skeleton/app.js"></script>
+</body>
+</html>

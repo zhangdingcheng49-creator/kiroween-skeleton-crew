@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Habit Tracker Test</title>
+</head>
+<body>
+    <h1>Habit Tracker Test</h1>
+    <p>This is a simple test to verify the habit tracker files are properly created.</p>
+    
+    <h2>Files Created:</h2>
+    <ul>
+        <li><a href="index.html">index.html</a> - Main habit tracker page</li>
+        <li><a href="habits.js">habits.js</a> - Habit tracker JavaScript logic</li>
+        <li><a href="README.md">README.md</a> - Documentation</li>
+    </ul>
+    
+    <h2>Test Navigation:</h2>
+    <p>Click the links below to test navigation:</p>
+    <ul>
+        <li><a href="../skeleton/index.html">Skeleton Home</a> - Should work</li>
+        <li><a href="index.html">Habits (current)</a> - Should work with "Habits" active</li>
+        <li><a href="../app-inventory/index.html">Inventory</a> - Will show 404 until inventory app is created</li>
+    </ul>
+    
+    <h2>Data Layer Test:</h2>
+    <p>Open browser console and check:</p>
+    <pre><code>
+// Check if skeleton app is loaded
+console.log('skeletonApp:', window.skeletonApp);
+
+// Check if habit tracker is loaded (after visiting index.html)
+console.log('habitTracker:', window.habitTracker);
+
+// Check habits data
+const habits = window.skeletonApp?.data?.getAll('habits');
+console.log('Habits:', habits);
+    </code></pre>
+    
+    <h2>Demo Data:</h2>
+    <p>The skeleton app creates demo habits. The habit tracker migrates them to use <code>completedDates</code> instead of <code>streak</code> property.</p>
+</body>
+</html>
